@@ -19,10 +19,10 @@ app = FastAPI(
 # Helper Functions
 # ============================================================================
 
-def parse_csv(file_content: bytes, max_rows: int = 20) -> List[Dict[str, Any]]:
+def parse_csv(file_content: bytes, max_rows: int = 100) -> List[Dict[str, Any]]:
     """Parse CSV und gib erste N Zeilen zurück"""
     csv_text = file_content.decode('utf-8')
-    csv_reader = csv.DictReader(io.StringIO(csv_text))
+    csv_reader = csv.DictReader(io.StringIO(csv_text),delimiter = ';')
     
     rows = []
     for i, row in enumerate(csv_reader):
@@ -62,10 +62,10 @@ async def upload_csv_return_json(
     file2: UploadFile = File(..., description="Zweite CSV-Datei")
 ):
     """
-    Upload zwei CSV-Dateien und erhalte die ersten 20 Einträge aus der ersten Datei als JSON
+    Upload zwei CSV-Dateien und erhalte die ersten 100 Einträge aus der ersten Datei als JSON
     
     Returns:
-        JSON mit ersten 20 Zeilen aus file1
+        JSON mit ersten 100 Zeilen aus file1
     """
     # Validierung
     if not file1.filename.lower().endswith('.csv'):
@@ -78,9 +78,9 @@ async def upload_csv_return_json(
     file1_content = await file1.read()
     file2_content = await file2.read()
     
-    # Nur file1 parsen (erste 20 Zeilen)
+    # Nur file1 parsen (erste 100 Zeilen)
     try:
-        data = parse_csv(file1_content, max_rows=20)
+        data = parse_csv(file1_content, max_rows=100)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error parsing CSV: {str(e)}")
     
@@ -97,10 +97,10 @@ async def upload_csv_return_xlsx(
     file2: UploadFile = File(..., description="Zweite CSV-Datei")
 ):
     """
-    Upload zwei CSV-Dateien und erhalte die ersten 20 Einträge aus der ersten Datei als XLSX
+    Upload zwei CSV-Dateien und erhalte die ersten 100 Einträge aus der ersten Datei als XLSX
     
     Returns:
-        XLSX-Datei mit ersten 20 Zeilen aus file1
+        XLSX-Datei mit ersten 100 Zeilen aus file1
     """
     # Validierung
     if not file1.filename.lower().endswith('.csv'):
@@ -113,9 +113,9 @@ async def upload_csv_return_xlsx(
     file1_content = await file1.read()
     file2_content = await file2.read()
     
-    # Nur file1 parsen (erste 20 Zeilen)
+    # Nur file1 parsen (erste 100 Zeilen)
     try:
-        data = parse_csv(file1_content, max_rows=20)
+        data = parse_csv(file1_content, max_rows=100)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error parsing CSV: {str(e)}")
     
@@ -140,10 +140,10 @@ async def upload_csv_return_csv(
     file2: UploadFile = File(..., description="Zweite CSV-Datei")
 ):
     """
-    Upload zwei CSV-Dateien und erhalte die ersten 20 Einträge aus der ersten Datei als CSV
+    Upload zwei CSV-Dateien und erhalte die ersten 100 Einträge aus der ersten Datei als CSV
     
     Returns:
-        CSV-Datei mit ersten 20 Zeilen aus file1
+        CSV-Datei mit ersten 100 Zeilen aus file1
     """
     # Validierung
     if not file1.filename.lower().endswith('.csv'):
@@ -156,9 +156,9 @@ async def upload_csv_return_csv(
     file1_content = await file1.read()
     file2_content = await file2.read()
     
-    # Nur file1 parsen (erste 20 Zeilen)
+    # Nur file1 parsen (erste 100 Zeilen)
     try:
-        data = parse_csv(file1_content, max_rows=20)
+        data = parse_csv(file1_content, max_rows=100)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error parsing CSV: {str(e)}")
     
