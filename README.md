@@ -12,7 +12,7 @@ https://cc-svc.mehlmann.com/redoc
 https://cc-svc.mehlmann.com/openapi.json
 
 ## Dateien hochladen
-curl -X POST https://cc-svc.mehlmann.com/upload/json -F "file1=@20250925_Contentklammer_Titeldaten.csv" -F "file2=@20250925_o2p.csv"
+curl -X POST https://cc-svc.mehlmann.com/upload/csv -F "file1=@20250925_Contentklammer_Titeldaten.csv" -F "file2=@20250925_o2p.csv"
 
 # Virtual Environment erstellen
 python3 -m venv venv
