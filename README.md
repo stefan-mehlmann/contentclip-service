@@ -4,7 +4,6 @@ docker login
 docker buildx build --platform linux/amd64,linux/arm64 -t mehlmann/repos:cc-svc --push .
 
 kubectl apply -f k8s-deploy.yml    
-kubectl apply -f cloudflare-tunnel.yml  
 
 ## Test-URLs
 https://cc-svc.mehlmann.com/
