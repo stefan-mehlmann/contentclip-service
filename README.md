@@ -6,8 +6,14 @@ docker buildx build --platform linux/amd64,linux/arm64 -t mehlmann/repos:cc-svc 
 kubectl apply -f k8s-deploy.yml    
 kubectl apply -f cloudflare-tunnel.yml  
 
+## Test-URLs
+https://cc-svc.mehlmann.com/
 https://cc-svc.mehlmann.com/docs
+https://cc-svc.mehlmann.com/redoc
+https://cc-svc.mehlmann.com/openapi.json
 
+## Dateien hochladen
+curl -X POST https://cc-svc.mehlmann.com/upload/json -F "file1=@20250925_Contentklammer_Titeldaten.csv" -F "file2=@20250925_o2p.csv"
 
 # Virtual Environment erstellen
 python3 -m venv venv
@@ -26,13 +32,6 @@ curl -X POST \
   -F "file2=@data2.xlsx" \
   http://localhost:8000/upload
 
-# Response:
-{
-  "job_id": "abc-123-def",
-  "status": "pending",
-  "created_at": "2025-11-02T10:30:00",
-  "message": "Files 'data1.xlsx' and 'data2.xlsx' uploaded successfully..."
-}
 
 # Swagger UI (interaktiv)
 http://localhost:8000/docs
