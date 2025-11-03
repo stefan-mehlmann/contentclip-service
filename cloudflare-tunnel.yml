@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared-tunnel
+  namespace: cc-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflared-tunnel
+  template:
+    metadata:
+      labels:
+        app: cloudflared-tunnel
+    spec:
+      containers:
+      - name: cloudflared
+        image: cloudflare/cloudflared
+        command: ["cloudflared", "tunnel", "--no-autoupdate", "run", "--token", "eyJhIjoiNWM0MTI4NWY4YWZlMTdkMmE3YzYyMjNkNDgxYjM0N2EiLCJ0IjoiMDY1OGYwN2YtMDY1NS00ODI0LTlmZDctOTFiZGE5YWJmN2QyIiwicyI6IlpURTFZemMzTTJZdE5UTTVZUzAwWVdKakxUa3hObUl0TTJKak5XRmhaR1ptTTJZeSJ9"]
+      nodeSelector:
+        kubernetes.io/os: linux

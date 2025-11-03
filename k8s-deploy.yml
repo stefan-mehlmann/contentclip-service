@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cc-svc
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJtZWhsbWFubiIsInBhc3N3b3JkIjoiZG9ja2VyMjgwOCMiLCJlbWFpbCI6InN0ZWZhbkBtZWhsbWFubi5jb20iLCJhdXRoIjoiYldWb2JHMWhibTQ2Wkc5amEyVnlNamd3T0NNPSJ9fX0=
+kind: Secret
+metadata:
+  name: regcred
+  namespace: cc-svc
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cc-svc
+  namespace: cc-svc
+  labels:
+    app: cc-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cc-svc
+  template:
+    metadata:
+      labels:
+        app: cc-svc
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - name: cc-svc
+          image: mehlmann/repos:cc-svc
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PORT
+              value: "8000"
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cc-svc
+  namespace: cc-svc
+spec:
+  selector:
+    app: cc-svc
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared-tunnel
+  namespace: cc-svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflared-tunnel
+  template:
+    metadata:
+      labels:
+        app: cloudflared-tunnel
+    spec:
+      containers:
+      - name: cloudflared
+        image: cloudflare/cloudflared
+        command: ["cloudflared", "tunnel", "--no-autoupdate", "run", "--token", "eyJhIjoiNWM0MTI4NWY4YWZlMTdkMmE3YzYyMjNkNDgxYjM0N2EiLCJ0IjoiMDY1OGYwN2YtMDY1NS00ODI0LTlmZDctOTFiZGE5YWJmN2QyIiwicyI6IlpURTFZemMzTTJZdE5UTTVZUzAwWVdKakxUa3hObUl0TTJKak5XRmhaR1ptTTJZeSJ9"]
+      nodeSelector:
+        kubernetes.io/os: linux
