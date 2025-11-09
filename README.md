@@ -1,7 +1,7 @@
 # contentclip-service
 
-docker login
-docker buildx build --platform linux/amd64,linux/arm64 -t mehlmann/repos:cc-svc --push .
+docker logindocker buildx build --platform linux/amd64,linux/arm64 -t mehlmann/repos:cc-svc --push .
+
 
 kubectl apply -f k8s-deploy.yml    
 
